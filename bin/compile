@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+echo -n "-----> Running libsodium compile script"
+
 set -e
 
 mkdir -p "$1" "$2"
@@ -14,6 +16,9 @@ TARBALL_URL=https://download.libsodium.org/libsodium/releases/$TARBALL
 indent() {
   sed -u "s/^/       /"
 }
+
+echo -n "BUILD_PATH: ($BUILD_PATH)"
+echo -n "CACHE_PATH: ($CACHE_PATH)"
 
 if [ ! -d $CACHE_PATH/$SODIUM_DIR ];
 then
@@ -33,9 +38,11 @@ then
   echo -n "-----> Compiling libsodium... "
   make &> /dev/null
   echo "done"
+else
+  echo -n "------> Libsodium already compiled and stored at: ($CACHE_PATH/$SODIUM_DIR)"
 fi
 
-echo -n "-----> Copying libsodium ($VERSION)... "
+echo -n "-----> Copying libsodium ($VERSION)... to $BUILD_PATH/lib"
 mkdir -p $BUILD_PATH/lib
 cp -rf $CACHE_PATH/$SODIUM_DIR/src/libsodium/.libs/* $BUILD_PATH/lib
-echo "done"
+echo -n "-----> libsodium buildpack compile phase done!"
